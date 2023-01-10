@@ -1,0 +1,9 @@
+:PROPERTIES:
+:header-args: :noweb yes :mkdirp yes :comments link
+:END:
+
+#+title: Operating System Configurations
+#+subtitle: In One Org File
+#+property: header-args :noweb yes :mkdirp yes :comments link
+
+This file is an central place for my Operating System (OS) configurations.
