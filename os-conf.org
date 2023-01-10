@@ -1,18 +1,3 @@
-# Copyright (C) 2023  Xiaoyue Chen
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #+title: Operating System Configurations
 #+subtitle: In One Org File
 #+property: header-args :noweb yes :mkdirp yes :comments link
@@ -208,7 +193,7 @@ and its users said
 That was easy. xmonad rocks!
 #+end_quote
 
-I do not think XMonad is easy to use, but it indeed rocks because it help me learn Haskell. XMonad is in fact a Haskell library. Users must write a program in Haskell which uses the XMonad library. The program is then compiled into an executable binary using the Glasgow Haskell Compiler (GHC). Essentially, users need to write their own window manager program in Haskell.
+I do not think XMonad is easy to use, but it indeed rocks because it helps me learn Haskell. XMonad is in fact a Haskell library. Users must write a program in Haskell which uses the XMonad library. The program is then compiled into an executable binary using the Glasgow Haskell Compiler (GHC). Essentially, users need to write their own window manager program in Haskell.
 
 This approach makes XMonad extremely extendable. The flip side is that users need to learn the library and the Haskell language to customise it, which could be more difficult than remembering a few key bindings.
 
