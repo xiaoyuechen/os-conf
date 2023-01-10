@@ -3,7 +3,7 @@
 #+property: header-args :noweb yes :mkdirp yes :comments link
 #+startup: hideblocks
 
-This file is an central place for my Operating System (OS) configurations.
+This file is a central place for my Operating System (OS) configurations.
 
 * Desktop environment
 
@@ -20,6 +20,8 @@ I also use these utilities
 - feh :: an image viewer to manage wallpaper
 - keyd :: a system wide key mapping daemon
 - autorandr :: a display configuration manager
+- optimus-manager :: a GPU switching helper
+- fcitx5 :: an input method framework (Free Chinese Input Toy of X)
 
 The following sections describes the configuration for each of these software.
 
