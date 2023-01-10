@@ -1,9 +1,286 @@
-:PROPERTIES:
-:header-args: :noweb yes :mkdirp yes :comments link
-:END:
+# Copyright (C) 2023  Xiaoyue Chen
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #+title: Operating System Configurations
 #+subtitle: In One Org File
 #+property: header-args :noweb yes :mkdirp yes :comments link
+#+startup: hideblocks
 
 This file is an central place for my Operating System (OS) configurations.
+
+* Desktop environment
+
+My custom desktop environment mainly consists of
+
+- Emptty :: a Display Manager (DM)
+- XMonad :: a Window Manager (WM)
+- Taffybar :: a graphical Status Bar
+- Picom :: a Compositor
+
+I also use these utilities
+
+- XScreenSaver :: a collection of screensavers
+- feh :: an image viewer to manage wallpaper
+- keyd :: a system wide key mapping daemon
+- autorandr :: a display configuration manager
+
+The following sections describes the configuration for each of these software.
+
+** Emptty
+
+*** TODO Introduction
+
+*** Configuration
+#+begin_src conf :tangle /sudo::/etc/emptty/conf
+  # TTY, where emptty will start.
+  TTY_NUMBER=7
+
+  # Enables switching to defined TTY number.
+  SWITCH_TTY=true
+
+  # Enables printing of /etc/issue in daemon mode.
+  PRINT_ISSUE=true
+
+  # Enables printing of default motd, /etc/emptty/motd or /etc/emptty/motd-gen.sh.
+  PRINT_MOTD=true
+
+  # Preselected user, if AUTOLOGIN is enabled, this user is logged in.
+  DEFAULT_USER=xchen
+
+  # Enables Autologin, if DEFAULT_USER is defined and part of nopasswdlogin group. Possible values are "true" or "false".
+  AUTOLOGIN=false
+
+  # The default session used, if Autologin is enabled. If session is not found in list of session, it proceeds to manual selection.
+  # AUTOLOGIN_SESSION=i3
+
+  # If Autologin is enabled and session does not start correctly, the number of retries in short period is kept to eventually stop the infinite loop of restarts. -1 is for infinite retries, 0 is for no retry.
+  # AUTOLOGIN_MAX_RETRY=2
+
+  # Default LANG, if user does not have set own in init script.
+  #LANG=en_US.UTF-8
+
+  # Starts desktop with calling "dbus-launch".
+  DBUS_LAUNCH=false
+
+  # Starts Xorg desktop with calling "~/.xinitrc" script, if is true, file exists and selected WM/DE is Xorg session, it overrides DBUS_LAUNCH.
+  XINITRC_LAUNCH=false
+
+  # Prints available WM/DE each on new line instead of printing on single line.
+  VERTICAL_SELECTION=false
+
+  # Defines the way, how is logging handled. Possible values are "default", "appending" or "disabled".
+  #LOGGING=default
+
+  # Overrides path of log file
+  #LOGGING_FILE=/var/log/emptty/[TTY_NUMBER].log
+
+  # Arguments passed to Xorg server.
+  XORG_ARGS=-ardelay 200 -arinterval 30
+
+  # Allows to use dynamic motd script to generate custom MOTD.
+  #DYNAMIC_MOTD=false
+
+  # Allows to override default path to dynamic motd.
+  #DYNAMIC_MOTD_PATH=/etc/emptty/motd-gen.sh
+
+  # Allows to override default path to static motd.
+  #MOTD_PATH=/etc/emptty/motd
+
+  # Foreground color, available only in daemon mode.
+  #FG_COLOR=LIGHT_BLACK
+
+  # Background color, available only in daemon mode.
+  #BG_COLOR=BLACK
+
+  # Script started before Display (Xorg/Wayland) starts.
+  # NOTE: The script is started as default user; in daemon mode it means root.
+  DISPLAY_START_SCRIPT=/usr/bin/prime-offload
+
+  # Script started after Display (Xorg/Wayland) stops.
+  # NOTE: The script is started as default user; in daemon mode it means root.
+  DISPLAY_STOP_SCRIPT=/usr/bin/prime-switch
+
+  # Enables numlock in daemon mode. Possible values are "true" or "false".
+  #ENABLE_NUMLOCK=false
+
+  # Defines the way, how is logging of session errors handled. Possible values are "default", "appending" or "disabled".
+  SESSION_ERROR_LOGGING=default
+
+  # Overrides path of session errors log file
+  #SESSION_ERROR_LOGGING_FILE=/var/log/emptty/session-errors.[TTY_NUMBER].log
+
+  # If set true, it will not use `.emptty-xauth` file, but the standard `~/.Xauthority` file. This allows to handle xauth issues.
+  #DEFAULT_XAUTHORITY=false
+
+  #If set true, Xorg will be started as rootless, if system allows and emptty is running in daemon mode.
+  #ROOTLESS_XORG=false
+
+  #If set true, environemntal groups are printed to differ Xorg/Wayland/Custom/UserCustom desktops.
+  IDENTIFY_ENVS=false
+#+end_src
+
+#+begin_src shell :tangle ~/.config/emptty :shebang "#!/bin/sh"
+  Selection=true
+
+  userresources=$HOME/.Xresources
+  usermodmap=$HOME/.Xmodmap
+  sysresources=/etc/X11/xinit/.Xresources
+  sysmodmap=/etc/X11/xinit/.Xmodmap
+
+  # merge in defaults and keymaps
+
+  if [ -f $sysresources ]; then
+      xrdb -merge $sysresources
+  fi
+
+  if [ -f $sysmodmap ]; then
+      xmodmap $sysmodmap
+  fi
+
+  if [ -f "$userresources" ]; then
+      xrdb -merge "$userresources"
+  fi
+
+  if [ -f "$usermodmap" ]; then
+      xmodmap "$usermodmap"
+  fi
+
+  if [ -d /etc/X11/xinit/xinitrc.d ] ; then
+      for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+          [ -x "$f" ] && . "$f"
+      done
+      unset f
+  fi
+
+  . /etc/profile
+  . ~/.profile
+  . ~/.xprofile
+
+  exec $@
+#+end_src
+
+#+begin_src shell :tangle ~/.xprofile :shebang "#!/bin/sh"
+  if [ $XDG_SESSION_DESKTOP = Emacs ] || [ $XDG_SESSION_DESKTOP = Xmonad ]; then
+      autorandr --force --change
+
+      export _JAVA_AWT_WM_NONREPARENTING=1
+
+      xsetroot -cursor_name left_ptr
+      picom -b
+      xscreensaver --no-splash &
+
+      if [ $XDG_SESSION_DESKTOP = Xmonad ]; then
+          status-notifier-watcher &
+          keyd-application-mapper -d
+          systemctl --user start wallpaper.service
+          systemctl --user start wallpaper@15.timer
+      fi
+
+      fcitx5 -d
+  fi
+#+end_src
+
+** XMonad
+
+*** Introduction
+
+[[https://xmonad.org/][XMonad]] is
+
+#+begin_quote
+A dynamically tiling X11 window manager that is written and configured in Haskell.
+#+end_quote
+
+and its users said
+
+#+begin_quote
+That was easy. xmonad rocks!
+#+end_quote
+
+I do not think XMonad is easy to use, but it indeed rocks because it help me learn Haskell. XMonad is in fact a Haskell library. Users must write a program in Haskell which uses the XMonad library. The program is then compiled into an executable binary using the Glasgow Haskell Compiler (GHC). Essentially, users need to write their own window manager program in Haskell.
+
+This approach makes XMonad extremely extendable. The flip side is that users need to learn the library and the Haskell language to customise it, which could be more difficult than remembering a few key bindings.
+
+I like learning new things. I like Haskell. I have a lot of free time (really?). Therefore, I use XMonad. However, I would not recommend those who do not have the same motivations to use XMonad.
+
+*** Configuration
+
+On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], packages ~xmonad~ and ~xmonad-contrib~ are required.
+
+#+begin_src haskell :tangle ~/.config/xmonad/xmonad.hs
+  import System.Taffybar.Support.PagerHints (pagerHints)
+  import XMonad
+  import XMonad.Actions.PhysicalScreens (onNextNeighbour)
+  import XMonad.Hooks.EwmhDesktops (ewmh)
+  import XMonad.Hooks.ManageDocks (avoidStruts, docks)
+  import XMonad.Hooks.StatusBar (
+    StatusBarConfig,
+    statusBarGeneric,
+    withSB,
+   )
+  import XMonad.Layout.Spacing (smartSpacingWithEdge)
+  import qualified XMonad.StackSet as W
+  import XMonad.Util.EZConfig (additionalKeysP)
+  import XMonad.Util.SpawnOnce (spawnOnce)
+
+  main :: IO ()
+  main = do
+    xmonad
+      . withSB mySB
+      . ewmh
+      . docks
+      . pagerHints
+      $ myConfig
+
+  myConfig =
+    def
+      { modMask = mod4Mask
+      , layoutHook = myLayout
+      , startupHook = myStartupHook
+      , borderWidth = 0
+      , terminal = "emacsclient -e \"(spawn-eshell \\\"$DISPLAY\\\")\""
+      }
+      `additionalKeysP` myKeys
+
+  mySB :: StatusBarConfig
+  mySB = statusBarGeneric "taffybar" mempty
+
+  myStartupHook :: X ()
+  myStartupHook = do
+    spawnOnce "emacsclient -c"
+
+  myKeys :: [(String, X ())]
+  myKeys =
+    [ ("M-o", onNextNeighbour def W.view)
+    , ("M-S-o", onNextNeighbour def W.shift)
+    , ("M-p", spawn "rofi -show drun")
+    , ("M-S-p", spawn "rofi -show run")
+    , ("M-x", spawn "rofi -show window")
+    , ("M-S-l", spawn "xscreensaver-command -lock")
+    ,
+      ( "M-b"
+      , spawn
+          "dbus-send \
+          \--type=method_call \
+          \--dest=taffybar.toggle \
+          \/taffybar/toggle \
+          \taffybar.toggle.toggleCurrent"
+      )
+    , ("M-d", spawn "autorandr --cycle")
+    ]
+
+  myLayout = avoidStruts . smartSpacingWithEdge 10 $ tiled ||| Mirror tiled ||| Full
+   where
+    tiled = Tall 1 (3 / 100) (1 / 2)
+#+end_src
