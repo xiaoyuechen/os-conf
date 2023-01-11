@@ -1,6 +1,6 @@
 #+title: Operating System Configurations
 #+subtitle: In One Org File
-#+property: header-args :noweb yes :mkdirp yes :comments link
+#+property: header-args :noweb yes :mkdirp yes :comments noweb
 #+startup: hideblocks
 
 This file is a central place for my Operating System (OS) configurations.
@@ -27,10 +27,7 @@ The following sections describes the configuration for each of these software.
 
 ** Emptty
 
-*** TODO Introduction
-
-*** Configuration
-
+#+caption: Emptty system-wide configuration
 #+begin_src conf :tangle /sudo::/etc/emptty/conf
   # TTY, where emptty will start.
   TTY_NUMBER=7
@@ -119,6 +116,7 @@ The following sections describes the configuration for each of these software.
   IDENTIFY_ENVS=false
 #+end_src
 
+#+caption: Emptty user configuration
 #+begin_src shell :tangle ~/.config/emptty :shebang "#!/bin/sh"
   Selection=true
 
@@ -159,6 +157,7 @@ The following sections describes the configuration for each of these software.
   exec $@
 #+end_src
 
+#+caption: User xprofile
 #+begin_src shell :tangle ~/.xprofile :shebang "#!/bin/sh"
   if [ $XDG_SESSION_DESKTOP = Emacs ] || [ $XDG_SESSION_DESKTOP = Xmonad ]; then
       autorandr --force --change
@@ -182,8 +181,6 @@ The following sections describes the configuration for each of these software.
 
 ** XMonad
 
-*** Introduction
-
 [[https://xmonad.org/][XMonad]] is
 
 #+begin_quote
@@ -202,10 +199,9 @@ This approach makes XMonad extremely extendable. The flip side is that users nee
 
 I like learning new things. I like Haskell. I have a lot of free time (really?). Therefore, I use XMonad. However, I would not recommend those who do not have the same motivations to use XMonad.
 
-*** Configuration
-
 On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], packages ~xmonad~ and ~xmonad-contrib~ are required.
 
+#+caption: My XMonad program
 #+begin_src haskell :tangle ~/.config/xmonad/xmonad.hs
   import System.Taffybar.Support.PagerHints (pagerHints)
   import XMonad
@@ -275,11 +271,7 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
 
 ** Taffybar
 
-*** Introduction
-
 [[https://github.com/taffybar/taffybar][Taffybar]] is a [[https://www.gtk.org/][GTK]] based status bar. It is an alternative to the mostly text-based [[https://codeberg.org/xmobar/xmobar][xmobar]]. It is somewhat buggy and crashes from time to time. It is one of the two popular Haskell status bar libraries (the other one is xmobar).
-
-*** Configuration
 
 #+begin_src haskell :tangle ~/.config/taffybar/taffybar.hs
   {-# LANGUAGE OverloadedStrings #-}
@@ -375,10 +367,6 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
 #+end_src
 
 ** Picom
-
-*** TODO Introduction
-
-*** Configuration
 
 #+begin_src conf :tangle ~/.config/picom.conf
   #################################
