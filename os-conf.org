@@ -258,6 +258,9 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
     , ("M-S-p", spawn "rofi -show run")
     , ("M-x", spawn "rofi -show window")
     , ("M-S-l", spawn "xscreensaver-command -lock")
+    , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 1%+")
+    , ("<XF86AudioLowerVolume>", spawn "amixer set Master 1%-")
+    , ("<XF86AudioMute>", spawn "amixer set Master toggle")
     ,
       ( "M-b"
       , spawn
