@@ -303,12 +303,13 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
 
   main :: IO ()
   main = do
+    configHome <- getEnv "XDG_CONFIG_HOME"
     dyreTaffybar
       . withLogServer
       . withToggleServer
       . toTaffyConfig
       $ mySimpleConfig
-        { cssPaths = ["~/.config/taffybar/taffybar.css"]
+        { cssPaths = [configHome ++ "/taffybar/taffybar.css"]
         }
 
   buildBoxFromWidgets widgets =
