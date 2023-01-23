@@ -203,7 +203,6 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
 
 #+caption: My XMonad program
 #+begin_src haskell :tangle ~/.config/xmonad/xmonad.hs
-
   import System.Taffybar.Support.PagerHints
   import XMonad
   import XMonad.Actions.GroupNavigation
@@ -249,8 +248,8 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
 
   myKeys :: [(String, X ())]
   myKeys =
-    [ ("M-s", onNextNeighbour def W.view)
-    , ("M-S-s", onNextNeighbour def W.shift)
+    [ ("M-w", onNextNeighbour def W.view)
+    , ("M-S-w", onNextNeighbour def W.shift)
     , ("M-j", focusDown)
     , ("M-k", focusUp)
     , ("M-p", spawn "rofi -show drun")
