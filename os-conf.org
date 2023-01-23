@@ -544,12 +544,12 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
   #     Background-Blurring       #
   #################################
 
-  blur:
-  {
-    method = "gaussian";
-    size = 64;
-    deviation = 32;
-  };
+  # blur:
+  # {
+  #   method = "gaussian";
+  #   size = 64;
+  #   deviation = 32;
+  # };
 
   # Parameters for background blurring, see the *BLUR* section for more information.
   # blur-method =
