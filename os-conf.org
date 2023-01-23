@@ -206,13 +206,14 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
 
   import System.Taffybar.Support.PagerHints
   import XMonad
+  import XMonad.Actions.GroupNavigation
   import XMonad.Actions.Minimize
   import XMonad.Actions.PhysicalScreens
+  import XMonad.Actions.WindowBringer
   import XMonad.Hooks.EwmhDesktops
   import XMonad.Hooks.ManageDocks
   import XMonad.Hooks.StatusBar
   import XMonad.Layout.BoringWindows
-  import XMonad.Layout.Minimize
   import XMonad.Layout.Spacing
   import XMonad.Layout.TwoPanePersistent
   import qualified XMonad.StackSet as W
@@ -233,6 +234,7 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
       { modMask = mod4Mask
       , layoutHook = myLayout
       , startupHook = myStartupHook
+      , logHook = historyHook
       , borderWidth = 0
       , terminal = "emacsclient -e \"(spawn-eshell \\\"$DISPLAY\\\")\""
       }
@@ -247,16 +249,14 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
 
   myKeys :: [(String, X ())]
   myKeys =
-    [ ("M-o", onNextNeighbour def W.view)
-    , ("M-S-o", onNextNeighbour def W.shift)
+    [ ("M-s", onNextNeighbour def W.view)
+    , ("M-S-s", onNextNeighbour def W.shift)
     , ("M-j", focusDown)
     , ("M-k", focusUp)
-    , ("M-m", focusMaster)
-    , ("M-0", withFocused minimizeWindow)
-    , ("M-S-0", withLastMinimized maximizeWindowAndFocus)
     , ("M-p", spawn "rofi -show drun")
     , ("M-S-p", spawn "rofi -show run")
-    , ("M-x", spawn "rofi -show window")
+    , ("M-o", nextMatch History $ return True)
+    , ("M-x", spawn "rofi -show windowcd")
     , ("M-S-l", spawn "xscreensaver-command -lock")
     , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 1%+")
     , ("<XF86AudioLowerVolume>", spawn "amixer set Master 1%-")
@@ -274,7 +274,7 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
     ]
 
   myLayout =
-    boringAuto . minimize . avoidStruts . smartSpacingWithEdge 10 $
+    boringAuto . avoidStruts . smartSpacingWithEdge 10 $
       twoPane ||| Full ||| tiled ||| Mirror tiled
    where
     twoPane = TwoPanePersistent Nothing (3 / 100) (1 / 2)
