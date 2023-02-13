@@ -260,6 +260,10 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
     , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 1%+")
     , ("<XF86AudioLowerVolume>", spawn "amixer set Master 1%-")
     , ("<XF86AudioMute>", spawn "amixer set Master toggle")
+    , ("<XF86MonBrightnessUp>", spawn "brightnessctl s +10%")
+    , ("<XF86MonBrightnessDown>", spawn "brightnessctl s 10%-")
+    , ("<XF86KbdBrightnessUp>", spawn "brightnessctl --device='asus::kbd_backlight' s +10%")
+    , ("<XF86KbdBrightnessDown>", spawn "brightnessctl --device='asus::kbd_backlight' s 10%-")
     ,
       ( "M-b"
       , spawn
@@ -678,12 +682,12 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
   #     Background-Blurring       #
   #################################
 
-  # blur:
-  # {
-  #   method = "gaussian";
-  #   size = 64;
-  #   deviation = 32;
-  # };
+  blur:
+  {
+    method = "gaussian";
+    size = 64;
+    deviation = 32;
+  };
 
   # Parameters for background blurring, see the *BLUR* section for more information.
   # blur-method =
