@@ -213,6 +213,7 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
   import XMonad.Hooks.ManageDocks
   import XMonad.Hooks.StatusBar
   import XMonad.Layout.BoringWindows
+  import XMonad.Layout.Minimize
   import XMonad.Layout.Spacing
   import XMonad.Layout.TwoPanePersistent
   import qualified XMonad.StackSet as W
@@ -252,6 +253,9 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
     , ("M-S-w", onNextNeighbour def W.shift)
     , ("M-j", focusDown)
     , ("M-k", focusUp)
+    , ("M-m", focusMaster)
+    , ("M-0", withFocused minimizeWindow)
+    , ("M-S-0", withLastMinimized maximizeWindowAndFocus)
     , ("M-p", spawn "rofi -show drun")
     , ("M-S-p", spawn "rofi -show run")
     , ("M-o", nextMatch History $ return True)
@@ -264,6 +268,7 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
     , ("<XF86MonBrightnessDown>", spawn "brightnessctl s 10%-")
     , ("<XF86KbdBrightnessUp>", spawn "brightnessctl --device='asus::kbd_backlight' s +10%")
     , ("<XF86KbdBrightnessDown>", spawn "brightnessctl --device='asus::kbd_backlight' s 10%-")
+    , ("<XF86Launch4>", spawn "fanboostctl --next")
     ,
       ( "M-b"
       , spawn
@@ -277,7 +282,7 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
     ]
 
   myLayout =
-    boringAuto . avoidStruts . smartSpacingWithEdge 10 $
+    boringAuto . minimize . avoidStruts . smartSpacingWithEdge 10 $
       twoPane ||| Full ||| tiled ||| Mirror tiled
    where
     twoPane = TwoPanePersistent Nothing (3 / 100) (1 / 2)
@@ -352,7 +357,6 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
               , clockFormatString = "<b>%a %-d %b</b>  %R"
               }
         windows = windowsNew def
-        notifications = notifyAreaNew def
         tray = do
           widget <- sniTrayNew
           liftIO $ do
@@ -368,7 +372,7 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
      in def
           { monitorsAction = usePrimaryMonitor
           , startWidgets = [workspaces, windows >>= buildPadBox]
-          , centerWidgets = map (>>= buildPadBox) [clock, notifications]
+          , centerWidgets = [clock]
           , endWidgets =
               [ buildBoxFromWidgets [batteryIconNew, tray] >>= buildContentsBox
               , sysinfo
@@ -682,12 +686,12 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
   #     Background-Blurring       #
   #################################
 
-  blur:
-  {
-    method = "gaussian";
-    size = 64;
-    deviation = 32;
-  };
+  # blur:
+  # {
+  #   method = "gaussian";
+  #   size = 64;
+  #   deviation = 32;
+  # };
 
   # Parameters for background blurring, see the *BLUR* section for more information.
   # blur-method =
