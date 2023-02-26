@@ -348,7 +348,8 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
           let cpu = pollingGraphNew cpuCfg 0.5 cpuCallback
               mem = pollingGraphNew memCfg 1 memCallback
               net = networkGraphNew netCfg Nothing
-           in buildBoxFromWidgets (map (>>= buildPadBox) [net, mem, cpu]) >>= buildPadBox
+              battery = textBatteryNew "$percentage$%"
+           in buildBoxFromWidgets (map (>>= buildPadBox) [battery, net, mem, cpu]) >>= buildPadBox
         clock =
           textClockNewWith
             def
@@ -374,7 +375,7 @@ On the GNU/Linux distribution I use, [[https://archlinux.org/][Arch Linux]], pac
           , startWidgets = [workspaces, windows >>= buildPadBox]
           , centerWidgets = [clock]
           , endWidgets =
-              [ buildBoxFromWidgets [batteryIconNew, tray] >>= buildContentsBox
+              [ buildBoxFromWidgets [tray] >>= buildContentsBox
               , sysinfo
               , weather >>= buildPadBox
               ]
